@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wip {
+  border: solid;
+  border-width: 1px;
+  border-color: orange;
+  position: relative;
+}
+
+.wip::after {
+  content: "Coming soon..";
+  font-size: 8px;
+  position: absolute;
+  bottom: 0;
+  right: 4px;
+  color: orange;
+}
