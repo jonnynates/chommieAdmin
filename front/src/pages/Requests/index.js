@@ -1,14 +1,26 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Search } from "react-feather";
+import Status from "../../components/Status";
+import RequestDropdown from "./components/RequestDropdown";
 var moment = require("moment");
 
 export default function Requests() {
+  let location = useLocation();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
+    if (location.pathname === "/requests") {
+      fetchAllOrders();
+    } else if (location.pathname === "/new-requests") {
+      fetchNewOrders();
+    }
+  }, []);
+
+  const fetchAllOrders = () => {
     fetch("http://localhost:9000/orders")
       .then((res) => res.json())
       .then(
@@ -24,10 +36,24 @@ export default function Requests() {
           setError(error);
         }
       );
-  }, []);
+  };
+
+  const fetchNewOrders = () => {
+    fetch("http://localhost:9000/orders/new")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setOrders(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  };
 
   const filterOrders = useMemo(() => {
-    console.log("hello");
     if (!orders) {
       return [];
     }
@@ -86,25 +112,31 @@ export default function Requests() {
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                         >
-                          Discord Name
+                          Customer Name
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Kit Name
+                          Product
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Order Status
+                          SKU
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
                           Date Requested
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Status
                         </th>
                         <th
                           scope="col"
@@ -124,21 +156,18 @@ export default function Requests() {
                             {order.grade + " " + order.name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.description}
+                            {order.hlj_ref}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {moment(order.date_requested).format(
                               "DD/MM/YYYY HH:mm"
                             )}
                           </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm">
+                            <Status name={order.description} />
+                          </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <a
-                              href="#"
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit
-                              <span className="sr-only">, {order.name}</span>
-                            </a>
+                            <RequestDropdown order={order} />
                           </td>
                         </tr>
                       ))}

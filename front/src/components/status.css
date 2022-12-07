@@ -1,0 +1,20 @@
+.text-status-backordered {
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 204 255 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(0 51 204 / var(--tw-text-opacity));
+}
+
+.text-status-new-request {
+  --tw-bg-opacity: 1;
+  background-color: rgb(153 255 153 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(0 51 0 / var(--tw-text-opacity));
+}
+
+.text-status-red {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
+}

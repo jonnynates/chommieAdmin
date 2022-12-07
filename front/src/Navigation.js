@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Menu as MenuBar, X, Bell } from "react-feather";
+import { Menu as MenuBar, X } from "react-feather";
+import logo from "./assets/ChommieBot.png";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -11,10 +12,9 @@ export default function Navigation() {
   const location = useLocation();
 
   const [navigation, setNavigation] = useState([
-    { name: "Requests", href: "/", current: false },
-    { name: "Stats", href: "/home", current: true },
-    { name: "New Orders", href: "sadasdasd", current: false },
-    { name: "Calendar", href: "#", current: false },
+    { name: "New Requests", href: "/new-requests", current: true },
+    { name: "Requests", href: "/requests", current: false },
+    { name: "Stats", href: "/home", current: false },
   ]);
 
   useEffect(() => {
@@ -44,6 +44,7 @@ export default function Navigation() {
     }
     setNavigation(newNav);
   }, [location]);
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -61,17 +62,20 @@ export default function Navigation() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <div className="flex flex-shrink-0 items-center">
+              <div className="flex flex-1 items-center justify-center sm:items-center sm:justify-start">
+                <div className="flex flex-shrink-0 items-center h-12">
+                  <h1 className="px-3 py-2 rounded-md text-sm font-medium text-white leading-none">
+                    ChommieAdmin
+                  </h1>
                   <img
+                    src={logo}
+                    alt="Logo"
                     className="block h-8 w-auto lg:hidden"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
                   />
                   <img
-                    className="hidden h-8 w-auto lg:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
+                    src={logo}
+                    alt="Logo"
+                    className="hidden h-12 w-auto lg:block"
                   />
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
@@ -128,7 +132,7 @@ export default function Navigation() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
@@ -141,7 +145,7 @@ export default function Navigation() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
@@ -154,7 +158,7 @@ export default function Navigation() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            href="/"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
