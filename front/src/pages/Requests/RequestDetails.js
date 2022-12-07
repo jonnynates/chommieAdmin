@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Status from "../../components/Status";
+import { ChevronLeft } from "react-feather";
 var moment = require("moment");
 
 export default function RequestDetails() {
@@ -46,51 +47,69 @@ export default function RequestDetails() {
               <p className="mt-1 max-w-2xl text-sm text-gray-500">
                 Personal details and application.
               </p>
+
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                <ChevronLeft
+                  className="-ml-1 mr-2 h-5 w-5"
+                  aria-hidden="true"
+                />
+                Back
+              </button>
             </div>
-            <div className="border-t border-gray-200">
-              <dl>
-                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
+              <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3">
+                <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">
-                    Customer Name
+                    Customer name
                   </dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                  <dd className="mt-1 text-sm text-gray-900">
                     {order.discord_name}
                   </dd>
                 </div>
-                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">Email</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{order.email}</dd>
+                </div>
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Phone Number
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {order.phone_number}
+                  </dd>
+                </div>
+                <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Product</dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                  <dd className="mt-1 text-sm text-gray-900">
                     {order.grade + " " + order.name}
                   </dd>
                 </div>
-                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                  <dt className="text-sm font-medium text-gray-500">
-                    SKU code
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <div className="sm:col-span-1">
+                  <dt className="text-sm font-medium text-gray-500">SKU</dt>
+                  <dd className="mt-1 text-sm text-gray-900">
                     {order.hlj_ref}
                   </dd>
                 </div>
-                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">
                     Date Requested
                   </dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                  <dd className="mt-1 text-sm text-gray-900">
                     {moment(order.date_requested).format("DD/MM/YYYY HH:mm")}
                   </dd>
                 </div>
-                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div className="sm:col-span-1">
                   <dt className="text-sm font-medium text-gray-500">Status</dt>
-                  <dd className="mt-1 text-sm sm:col-span-2 sm:mt-0">
-                    {console.log(order.description)}
+                  <dd className="mt-1 text-sm text-gray-900">
                     <Status name={order.description} />
                   </dd>
                 </div>
-                <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <div className="sm:col-span-3">
                   <dt className="text-sm font-medium text-gray-500">Notes</dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-                    {order.notes}
-                  </dd>
+                  <dd className="mt-1 text-sm text-gray-900">{order.notes}</dd>
                 </div>
               </dl>
             </div>

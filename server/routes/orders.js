@@ -24,7 +24,7 @@ router.get("/new", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref, o.notes from orders o
+  const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
   left join kits k on k.id = o.product_id
   left join users u on u.id = o.user_id
   left join order_statuses os on os.id = o.status
