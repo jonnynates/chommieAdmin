@@ -1,36 +1,37 @@
-const userDB = require("../db/userDB");
+let userDB;
 
-module.exports = () => {
+module.exports = (injectedUserDB) => {
+  userDB = injectedUserDB;
+
   return {
     registerUser,
     login,
   };
 };
 
-async function registerUser(req, res) {
-  const validUser = userDB.isValidUser(req.body.username);
-  if (!validUser) {
-    const message = "This user already exists";
-    sendResponse(res, message, 400);
+function registerUser(req, res) {
+  userDB.isValidUser(req.body.username, (error, isValidUser) => {
+    if (error || !isValidUser) {
+      const message = error
+        ? "Something went wrong!"
+        : "This user already exists!";
 
-    return;
-  }
+      sendResponse(res, message, error);
 
-  const registeredUserID = userDB.register(
-    req.body.username,
-    req.body.password
-  );
+      return;
+    }
 
-  sendResponse(
-    res,
-    registeredUserID != undefined
-      ? "Successfuly registered user"
-      : "Error while registering user",
-    500
-  );
+    userDB.register(req.body.username, req.body.password, (response) => {
+      sendResponse(
+        res,
+        response.error === undefined ? "Success!!" : "Something went wrong!",
+        response.error
+      );
+    });
+  });
 }
 
-function login(query, res) {}
+function login(query, res) {} // eslint-disable-line no-use-before-define
 
 function sendResponse(res, message, error) {
   res.status(error !== undefined ? 400 : 200).json({

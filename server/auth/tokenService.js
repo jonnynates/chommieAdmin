@@ -1,7 +1,10 @@
-const tokenDB = require("../db/tokenDB");
-const userDB = require("../db/userDB");
+let userDB;
+let tokenDB;
 
-module.exports = () => {
+module.exports = (injectedUserDB, injectedTokenDB) => {
+  userDB = injectedUserDB;
+  tokenDB = injectedTokenDB;
+
   return {
     getClient,
     saveAccessToken,
@@ -11,7 +14,7 @@ module.exports = () => {
   };
 };
 
-function getClient(clientID, clientSecret) {
+function getClient(clientID, clientSecret, cbFunc) {
   const client = {
     clientID,
     clientSecret,
@@ -19,30 +22,30 @@ function getClient(clientID, clientSecret) {
     redirectUris: null,
   };
 
-  return false, client;
+  cbFunc(false, client);
 }
 
-// function grantTypeAllowed(clientID, grantType) {
-function grantTypeAllowed() {
-  return false, true;
+function grantTypeAllowed(clientID, grantType, cbFunc) {
+  cbFunc(false, true);
 }
 
-function getUser(username, password) {
-  return userDB.getUser(username, password);
+function getUser(username, password, cbFunc) {
+  userDB.getUser(username, password, cbFunc);
 }
 
-function saveAccessToken(accessToken, clientID, expires, user) {
-  return tokenDB.saveAccessToken(accessToken, user.id);
+function saveAccessToken(accessToken, clientID, expires, user, cbFunc) {
+  tokenDB.saveAccessToken(accessToken, user.id, cbFunc);
 }
 
-function getAccessToken(bearerToken) {
-  const userID = tokenDB.getUserIDFromBearerToken(bearerToken);
-  const accessToken = {
-    user: {
-      id: userID,
-    },
-    expires: null,
-  };
+function getAccessToken(bearerToken, cbFunc) {
+  tokenDB.getUserIDFromBearerToken(bearerToken, (userID) => {
+    const accessToken = {
+      user: {
+        id: userID,
+      },
+      expires: null,
+    };
 
-  return accessToken;
+    cbFunc(userID === null, userID === null ? null : accessToken);
+  });
 }

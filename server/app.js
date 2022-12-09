@@ -5,12 +5,16 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
-const oAuthService = require("./auth/tokenService");
+// Database imports
+const pgPool = require("./db/index");
+const tokenDB = require("./db/tokenDB")(pgPool);
+const userDB = require("./db/userDB")(pgPool);
+const orderDB = require("./db/orderDB")(pgPool);
+// OAuth imports
+const oAuthService = require("./auth/tokenService")(userDB, tokenDB);
 const oAuth2Server = require("node-oauth2-server");
 
-const mountRoutes = require("./routes");
-
-var app = express();
+const app = express();
 app.oauth = oAuth2Server({
   model: oAuthService,
   grants: ["password"],
@@ -28,7 +32,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-mountRoutes(app);
+// Auth and routes
+const authenticator = require("./auth/authenticator")(userDB);
+const order = require("./services/order")(orderDB);
+const authRoutes = require("./routes/auth")(
+  express.Router(),
+  app,
+  authenticator
+);
+const orderRoutes = require("./routes/orders")(express.Router(), app, order);
+app.use("/auth", authRoutes);
+app.use("/orders", orderRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

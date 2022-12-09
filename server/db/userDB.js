@@ -1,6 +1,8 @@
-const db = require("../db");
+let pgPool;
 
-module.exports = () => {
+module.exports = (injectedPgPool) => {
+  pgPool = injectedPgPool;
+
   return {
     register,
     getUser,
@@ -10,19 +12,18 @@ module.exports = () => {
 
 var crypto = require("crypto");
 
-async function register(username, password) {
+function register(username, password, cbFunc) {
   var shaPass = crypto
     .createHash("sha256")
     .update(password)
     .digest("hex");
 
-  const query = `INSERT INTO users (discord_name, password) VALUES ($1, $2) RETURNING id`;
+  const query = `INSERT INTO users (discord_name, password) VALUES ($1, $2)`;
 
-  const resp = await db.query(query, [username, shaPass]);
-  return resp;
+  pgPool.query(query, [username, shaPass], cbFunc);
 }
 
-async function getUser(username, password) {
+function getUser(username, password, cbFunc) {
   var shaPass = crypto
     .createHash("sha256")
     .update(password)
@@ -30,13 +31,26 @@ async function getUser(username, password) {
 
   const getUserQuery = `SELECT * FROM users WHERE discord_name = $1 AND password = $2`;
 
-  const resp = await db.query(getUserQuery, [username, shaPass]);
-  return resp && resp.rowCount === 1 ? resp.rows[0] : null;
+  pgPool.query(getUserQuery, [username, shaPass], (response) => {
+    cbFunc(
+      false,
+      response.results && response.results.rowCount === 1
+        ? response.results.rows[0]
+        : null
+    );
+  });
 }
 
-async function isValidUser(username) {
+function isValidUser(username, cbFunc) {
   const query = `SELECT * FROM users WHERE discord_name = $1`;
 
-  const resp = await db.query(query, [username]);
-  return resp.results ? !(resp.results.rowCount > 0) : null;
+  const checkUsrcbFunc = (response) => {
+    const isValidUser = response.results
+      ? !(response.results.rowCount > 0)
+      : null;
+
+    cbFunc(response.error, isValidUser);
+  };
+
+  pgPool.query(query, [username], checkUsrcbFunc);
 }
