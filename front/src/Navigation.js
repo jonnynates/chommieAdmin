@@ -23,7 +23,7 @@ export default function Navigation() {
     const isRootPath =
       location.pathname === "" ||
       location.pathname === "/" ||
-      location.pathname === "/dashboard";
+      location.pathname === "/new-requests";
 
     if (isRootPath) {
       newNav.forEach((nn) => {
