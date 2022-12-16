@@ -29,7 +29,7 @@ export default function Login() {
 
   const handleLogin = async (values) => {
     try {
-      Client.signInUser({
+      await Client.signInUser({
         username: values.username,
         password: values.password,
         grant_type: "password",
@@ -43,8 +43,19 @@ export default function Login() {
           const token = data.access_token;
           Client.setToken(token);
           setTokenInStorage(token);
+          getUser(values);
         });
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setServerErrorMessage(err.message);
+      } else {
+        setServerErrorMessage(DEFAULT_SERVER_ERROR_MESSAGE);
+      }
+    }
+  };
 
+  const getUser = (values) => {
+    try {
       Client.getUserOnSignIn({
         username: values.username,
         password: values.password,
@@ -54,7 +65,6 @@ export default function Login() {
         })
         .then(function(data) {
           const user = data;
-          console.log(user);
 
           setUser(user);
         });
@@ -67,7 +77,7 @@ export default function Login() {
     }
   };
 
-  if (tokenInStorage) {
+  if (user && tokenInStorage) {
     return navigate("/new-requests");
   }
 

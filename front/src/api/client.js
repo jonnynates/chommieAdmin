@@ -19,9 +19,8 @@ class ClientAPI {
 
   getUserOnSignIn(body) {
     return this.fetch("/auth/user", {
-      method: "GET",
+      method: "POST",
       body,
-      contentType: "application/x-www-form-urlencoded",
     });
   }
 
@@ -72,8 +71,6 @@ class ClientAPI {
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
     }
-    console.log(this.getToken());
-    console.log(headers["Authorization"]);
 
     return headers;
   }

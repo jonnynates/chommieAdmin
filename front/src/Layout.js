@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Menu as MenuBar, X } from "react-feather";
+import { ChevronDown, Menu as MenuBar, X } from "react-feather";
 import logo from "./assets/ChommieBot.png";
+import useLocalStorage, { TOKEN_STORAGE_KEY } from "./hooks/useLocalStorage";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,6 +11,11 @@ function classNames(...classes) {
 
 export default function Layout() {
   const location = useLocation();
+  const [tokenInStorage, setTokenInStorage] = useLocalStorage(
+    TOKEN_STORAGE_KEY,
+    null
+  );
+  const [user, setUser] = useLocalStorage("user", null);
 
   const [navigation, setNavigation] = useState([
     { name: "New Requests", href: "/new-requests", current: false },
@@ -21,8 +27,7 @@ export default function Layout() {
   useEffect(() => {
     const newNav = [...navigation];
 
-    const isRootPath =
-      location.pathname === "/new-requests";
+    const isRootPath = location.pathname === "/new-requests";
 
     if (isRootPath) {
       newNav.forEach((nn) => {
@@ -34,7 +39,10 @@ export default function Layout() {
       });
     } else {
       newNav.forEach((nn) => {
-        if (nn.href !== "/new-requests" && location.pathname.includes(nn.href)) {
+        if (
+          nn.href !== "/new-requests" &&
+          location.pathname.includes(nn.href)
+        ) {
           nn.current = true;
         } else {
           nn.current = false;
@@ -43,6 +51,11 @@ export default function Layout() {
     }
     setNavigation(newNav);
   }, [location]);
+
+  const signOut = () => {
+    setTokenInStorage(null);
+    setUser(null);
+  };
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -98,24 +111,12 @@ export default function Layout() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* <button
-                  type="button"
-                  className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <Bell className="h-6 w-6" aria-hidden="true" />
-                </button> */}
-
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                    <Menu.Button className="inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white ">
+                      {user.discord_name}
+                      <ChevronDown className="h-3" />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -131,37 +132,12 @@ export default function Layout() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="/"
+                            href="/login"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="/"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="/"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
+                            onClick={signOut}
                           >
                             Sign out
                           </a>
