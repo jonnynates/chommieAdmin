@@ -28,7 +28,8 @@ app.set("view engine", "jade");
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(app.oauth.errorHandler());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -38,7 +39,8 @@ const order = require("./services/order")(orderDB);
 const authRoutes = require("./routes/auth")(
   express.Router(),
   app,
-  authenticator
+  authenticator,
+  oAuthService
 );
 const orderRoutes = require("./routes/orders")(express.Router(), app, order);
 app.use("/auth", authRoutes);

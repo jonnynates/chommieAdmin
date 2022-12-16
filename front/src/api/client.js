@@ -17,6 +17,38 @@ class ClientAPI {
     });
   }
 
+  getUserOnSignIn(body) {
+    return this.fetch("/auth/user", {
+      method: "GET",
+      body,
+      contentType: "application/x-www-form-urlencoded",
+    });
+  }
+
+  getAllOrders() {
+    return this.fetch("/orders", {
+      method: "GET",
+    });
+  }
+
+  getNewOrders() {
+    return this.fetch("/orders/new", {
+      method: "GET",
+    });
+  }
+
+  getOrderDetail(id) {
+    return this.fetch(`/orders/${id}`, {
+      method: "GET",
+    });
+  }
+
+  getAllKits() {
+    return this.fetch(`/kits`, {
+      method: "GET",
+    });
+  }
+
   constructHeadersFromOptions(options) {
     const headers = {};
 
@@ -40,6 +72,8 @@ class ClientAPI {
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
     }
+    console.log(this.getToken());
+    console.log(headers["Authorization"]);
 
     return headers;
   }
@@ -60,7 +94,6 @@ class ClientAPI {
         formBody.push(encodedKey + "=" + encodedValue);
       }
       formBody = formBody.join("&");
-      console.log(formBody)
       fetchOpts.body = formBody;
     } else if (options.body) {
       fetchOpts.body =

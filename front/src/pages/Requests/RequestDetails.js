@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Status from "../../components/Status";
 import { ChevronLeft } from "react-feather";
+import { Client } from "../../api";
 var moment = require("moment");
 
 export default function RequestDetails() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [order, setOrder] = useState(null);
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -18,16 +20,13 @@ export default function RequestDetails() {
   }, [id]);
 
   const fetchOrderDetails = () => {
-    fetch(`http://localhost:9000/orders/${id}`)
+    Client.getOrderDetail(id)
       .then((res) => res.json())
       .then(
         (result) => {
           setIsLoaded(true);
           setOrder(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -40,24 +39,28 @@ export default function RequestDetails() {
       {Boolean(order) && (
         <div className="justify-center flex mt-5">
           <div className="overflow-hidden bg-white shadow sm:rounded-lg w-3/4">
-            <div className="px-4 py-5 sm:px-6">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Order Information
-              </h3>
-              <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                Personal details and application.
-              </p>
-
-              <button
-                type="button"
-                className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                <ChevronLeft
-                  className="-ml-1 mr-2 h-5 w-5"
-                  aria-hidden="true"
-                />
-                Back
-              </button>
+            <div className="px-4 py-5 sm:px-6 grid sm:grid-cols-2">
+              <div className="sm:col-span-1">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  Order Information
+                </h3>
+                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                  Personal details and application.
+                </p>
+              </div>
+              <div className="sm:col-span-1 justify-end flex">
+                <button
+                  type="button"
+                  className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  onClick={() => navigate(-1)}
+                >
+                  <ChevronLeft
+                    className="-ml-1 mr-2 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                  Back
+                </button>
+              </div>
             </div>
             <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
               <dl className="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-3">

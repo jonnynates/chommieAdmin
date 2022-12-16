@@ -3,12 +3,12 @@ import { Client, DEFAULT_SERVER_ERROR_MESSAGE } from "../../api";
 import { ApiError } from "../../api/client";
 import useLocalStorage, {
   TOKEN_STORAGE_KEY,
-} from "../../utils/useLocalStorage";
+} from "../../hooks/useLocalStorage";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import Input from "../../components/Input";
 import { Eye } from "react-feather";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Required"),
@@ -24,6 +24,7 @@ export default function Login() {
     TOKEN_STORAGE_KEY,
     null
   );
+  const [user, setUser] = useLocalStorage("user", null);
   const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const handleLogin = async (values) => {
@@ -39,7 +40,23 @@ export default function Login() {
           return response.json();
         })
         .then(function(data) {
-          setTokenInStorage(data.access_token);
+          const token = data.access_token;
+          Client.setToken(token);
+          setTokenInStorage(token);
+        });
+
+      Client.getUserOnSignIn({
+        username: values.username,
+        password: values.password,
+      })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          const user = data;
+          console.log(user);
+
+          setUser(user);
         });
     } catch (err) {
       if (err instanceof ApiError) {
@@ -51,16 +68,13 @@ export default function Login() {
   };
 
   if (tokenInStorage) {
-    return navigate("/new-request");
+    return navigate("/new-requests");
   }
 
   return (
     <>
       <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
-          {serverErrorMessage !== "" ? (
-            <div className="mb-2 mt-8 max-w-md">{serverErrorMessage}</div>
-          ) : null}
           <div>
             <img
               className="mx-auto h-12 w-auto"
