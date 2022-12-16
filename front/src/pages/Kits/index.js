@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Search } from "react-feather";
 import Status from "../../components/Status";
-import RequestDropdown from "./components/RequestDropdown";
+// import RequestDropdown from "./components/RequestDropdown";
 import { Client } from "../../api";
+import RequestDropdown from "../Requests/components/RequestDropdown";
 var moment = require("moment");
 
-export default function Requests() {
+function Kits() {
   let location = useLocation();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -14,15 +15,11 @@ export default function Requests() {
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
-    if (location.pathname === "/requests") {
-      fetchAllOrders();
-    } else if (location.pathname === "/new-requests") {
-      fetchNewOrders();
-    }
+    fetchAllKits();
   }, []);
 
-  const fetchAllOrders = () => {
-    Client.getAllOrders()
+  const fetchAllKits = () => {
+    Client.getAllKits()
       .then((res) => res.json())
       .then(
         (result) => {
@@ -32,21 +29,6 @@ export default function Requests() {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      );
-  };
-
-  const fetchNewOrders = () => {
-    Client.getNewOrders()
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setOrders(result);
-        },
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -67,7 +49,6 @@ export default function Requests() {
       );
     });
   }, [orders, searchString]);
-
   return (
     <div>
       {Boolean(orders) && (
@@ -183,3 +164,5 @@ export default function Requests() {
     </div>
   );
 }
+
+export default Kits;
