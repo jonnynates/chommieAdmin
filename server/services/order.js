@@ -5,7 +5,8 @@ module.exports = (injectedOrderDB) => {
 
   return {
     getAllOrders,
-    getNewRequests,
+    // getNewRequests,
+    getRequestsForStatus,
     getOrderDetails,
   };
 };
@@ -16,8 +17,8 @@ function getAllOrders(req, res) {
   });
 }
 
-function getNewRequests(req, res) {
-  orderDB.getNewRequests((response) => {
+function getRequestsForStatus(req, res) {
+  orderDB.getRequestsForStatusId(req.params.status, (response) => {
     res.send(response.results.rows);
   });
 }

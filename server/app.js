@@ -10,6 +10,7 @@ const pgPool = require("./db/index");
 const tokenDB = require("./db/tokenDB")(pgPool);
 const userDB = require("./db/userDB")(pgPool);
 const orderDB = require("./db/orderDB")(pgPool);
+const kitDB = require("./db/kitDB")(pgPool);
 // OAuth imports
 const oAuthService = require("./auth/tokenService")(userDB, tokenDB);
 const oAuth2Server = require("node-oauth2-server");
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Auth and routes
 const authenticator = require("./auth/authenticator")(userDB);
 const order = require("./services/order")(orderDB);
+const kit = require("./services/kit")(kitDB);
 const authRoutes = require("./routes/auth")(
   express.Router(),
   app,
@@ -43,8 +45,10 @@ const authRoutes = require("./routes/auth")(
   oAuthService
 );
 const orderRoutes = require("./routes/orders")(express.Router(), app, order);
+const kitRoutes = require("./routes/kits")(express.Router(), app, kit);
 app.use("/auth", authRoutes);
 app.use("/orders", orderRoutes);
+app.use("/kits", kitRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

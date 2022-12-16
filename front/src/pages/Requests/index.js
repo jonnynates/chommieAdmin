@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Search } from "react-feather";
 import Status from "../../components/Status";
 import RequestDropdown from "./components/RequestDropdown";
 import { Client } from "../../api";
+import orderStatuses from "../../utils/orderStatuses";
 var moment = require("moment");
 
 export default function Requests() {
@@ -12,12 +13,16 @@ export default function Requests() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [searchString, setSearchString] = useState("");
+  const [title, setTitle] = useState("");
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname === "/requests") {
       fetchAllOrders();
+      setTitle("Requests");
     } else if (location.pathname === "/new-requests") {
       fetchNewOrders();
+      setTitle("New Requests");
     }
   }, []);
 
@@ -40,7 +45,8 @@ export default function Requests() {
   };
 
   const fetchNewOrders = () => {
-    Client.getNewOrders()
+    console.log(orderStatuses.NewRequest);
+    Client.getOrdersForStatus(orderStatuses.NewRequest)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -74,7 +80,7 @@ export default function Requests() {
         <div className="mt-5 x-4 sm:px-6 lg:px-8">
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">Requests</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
 
               <div className="relative mt-2 rounded-md shadow-sm w-56 border-gray-300 border-2">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -96,6 +102,7 @@ export default function Requests() {
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
               <button
                 type="button"
+                onClick={() => navigate("/orders/new")}
                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               >
                 Add Order

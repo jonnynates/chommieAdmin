@@ -5,7 +5,7 @@ module.exports = (injectedPgPool) => {
 
   return {
     getAllOrders,
-    getNewRequests,
+    getRequestsForStatusId,
     getOrderDetails,
   };
 };
@@ -22,15 +22,15 @@ function getAllOrders(cbFunc) {
   });
 }
 
-function getNewRequests(cbFunc) {
+function getRequestsForStatusId(status_id, cbFunc) {
   const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref from orders o
       left join kits k on k.id = o.product_id
       left join users u on u.id = o.user_id
       left join order_statuses os on os.id = o.status
-      where o.status = 8
+      where o.status = $1
       order BY u.discord_name DESC`;
 
-  pgPool.query(sql, [], (response) => {
+  pgPool.query(sql, [status_id], (response) => {
     cbFunc(response);
   });
 }

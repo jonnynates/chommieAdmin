@@ -30,8 +30,8 @@ class ClientAPI {
     });
   }
 
-  getNewOrders() {
-    return this.fetch("/orders/new", {
+  getOrdersForStatus(status_id) {
+    return this.fetch(`/orders/${status_id}`, {
       method: "GET",
     });
   }

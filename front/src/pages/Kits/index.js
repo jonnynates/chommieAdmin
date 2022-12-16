@@ -11,7 +11,7 @@ function Kits() {
   let location = useLocation();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [orders, setOrders] = useState([]);
+  const [kits, setKits] = useState([]);
   const [searchString, setSearchString] = useState("");
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function Kits() {
       .then(
         (result) => {
           setIsLoaded(true);
-          setOrders(result);
+          setKits(result);
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -36,26 +36,23 @@ function Kits() {
       );
   };
 
-  const filterOrders = useMemo(() => {
-    if (!orders) {
+  const filterKits = useMemo(() => {
+    if (!kits) {
       return [];
     }
 
-    return orders.filter((o) => {
-      var kit = o.grade + " " + o.name;
-      return (
-        o.discord_name.toLowerCase().includes(searchString.toLowerCase()) ||
-        kit.toLowerCase().includes(searchString.toLowerCase())
-      );
+    return kits.filter((k) => {
+      var kit = k.grade + " " + k.name;
+      return kit.toLowerCase().includes(searchString.toLowerCase());
     });
-  }, [orders, searchString]);
+  }, [kits, searchString]);
   return (
     <div>
-      {Boolean(orders) && (
+      {Boolean(kits) && (
         <div className="mt-5 x-4 sm:px-6 lg:px-8">
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">Requests</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Kits</h1>
 
               <div className="relative mt-2 rounded-md shadow-sm w-56 border-gray-300 border-2">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -79,7 +76,7 @@ function Kits() {
                 type="button"
                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               >
-                Add Order
+                Add Kit
               </button>
             </div>
           </div>
@@ -94,13 +91,13 @@ function Kits() {
                           scope="col"
                           className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                         >
-                          Customer Name
+                          Product Line
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Product
+                          Product Name
                         </th>
                         <th
                           scope="col"
@@ -112,13 +109,7 @@ function Kits() {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Date Requested
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Status
+                          Price
                         </th>
                         <th
                           scope="col"
@@ -129,27 +120,22 @@ function Kits() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {filterOrders.map((order) => (
-                        <tr key={order.id}>
+                      {filterKits.map((kit) => (
+                        <tr key={kit.id}>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {order.discord_name}
+                            {kit.grade}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.grade + " " + order.name}
+                            {kit.name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.hlj_ref}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {moment(order.date_requested).format(
-                              "DD/MM/YYYY HH:mm"
-                            )}
+                            {kit.hlj_ref}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
-                            <Status name={order.description} />
+                            {kit.price}
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <RequestDropdown order={order} />
+                            <RequestDropdown order={kit} />
                           </td>
                         </tr>
                       ))}
