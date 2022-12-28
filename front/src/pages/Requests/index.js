@@ -3,17 +3,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Search } from "react-feather";
 import Status from "../../components/Status";
 import RequestDropdown from "./components/RequestDropdown";
-import { Client } from "../../api";
+import { ApiError, Client, DEFAULT_SERVER_ERROR_MESSAGE } from "../../api";
 import orderStatuses from "../../utils/orderStatuses";
+import RemoveOrderConfirmation from "./components/RemoveOrderConfirmation";
 var moment = require("moment");
 
 export default function Requests() {
   let location = useLocation();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [open, setOpen] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [currentOrder, setCurrentOrder] = useState(null);
   const [searchString, setSearchString] = useState("");
   const [title, setTitle] = useState("");
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +38,6 @@ export default function Requests() {
           setIsLoaded(true);
           setOrders(result);
         },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
         (error) => {
           setIsLoaded(true);
           setError(error);
@@ -45,7 +46,6 @@ export default function Requests() {
   };
 
   const fetchNewOrders = () => {
-    console.log(orderStatuses.NewRequest);
     Client.getOrdersForStatus(orderStatuses.NewRequest)
       .then((res) => res.json())
       .then(
@@ -74,10 +74,31 @@ export default function Requests() {
     });
   }, [orders, searchString]);
 
+  const deleteOrder = () => {
+    try {
+      Client.deleteOrder(currentOrder.id);
+
+      setOrders(orders.filter((o) => o.id !== currentOrder.id));
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setServerErrorMessage(err.message);
+      } else {
+        setServerErrorMessage(DEFAULT_SERVER_ERROR_MESSAGE);
+      }
+    } finally {
+      setOpen(false);
+    }
+  };
+
   return (
     <div>
       {Boolean(orders) && (
         <div className="mt-5 x-4 sm:px-6 lg:px-8">
+          <RemoveOrderConfirmation
+            open={open}
+            setOpen={setOpen}
+            deleteOrder={deleteOrder}
+          />
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
               <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
@@ -110,9 +131,9 @@ export default function Requests() {
             </div>
           </div>
           <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead className="bg-gray-50">
                       <tr>
@@ -175,7 +196,12 @@ export default function Requests() {
                             <Status name={order.description} />
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <RequestDropdown order={order} />
+                            <RequestDropdown
+                              currentOrder={order}
+                              setCurrentOrder={setCurrentOrder}
+                              setOpen={setOpen}
+                              deleteOrder={deleteOrder}
+                            />
                           </td>
                         </tr>
                       ))}

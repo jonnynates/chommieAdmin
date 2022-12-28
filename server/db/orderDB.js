@@ -7,6 +7,9 @@ module.exports = (injectedPgPool) => {
     getAllOrders,
     getRequestsForStatusId,
     getOrderDetails,
+    getOrderAuditHistory,
+    softDeleteOrder,
+    createAuditHistory,
   };
 };
 
@@ -15,6 +18,7 @@ function getAllOrders(cbFunc) {
     left join kits k on k.id = o.product_id
     left join users u on u.id = o.user_id
     left join order_statuses os on os.id = o.status
+    where o.status != 9
     order BY u.discord_name DESC`;
 
   pgPool.query(sql, [], (response) => {
@@ -44,6 +48,35 @@ function getOrderDetails(order_id, cbFunc) {
   order BY u.discord_name DESC`;
 
   pgPool.query(sql, [order_id], (response) => {
+    cbFunc(response);
+  });
+}
+
+function getOrderAuditHistory(order_id, cbFunc) {
+  const sql = `select ah.id, u.discord_name, os.description, ah.performed_at from audit_history ah
+  left join users u on u.id = ah.initiator_id
+  left join order_statuses os on os.id = ah.status_id
+  where ah.order_id = $1
+  order BY ah.performed_at DESC`;
+
+  pgPool.query(sql, [order_id], (response) => {
+    cbFunc(response);
+  });
+}
+
+function softDeleteOrder(order_id, cbFunc) {
+  const sql = `UPDATE orders SET date_removed = NOW(), status = 9 WHERE id = $1`;
+
+  pgPool.query(sql, [order_id], (response) => {
+    cbFunc(response);
+  });
+}
+
+function createAuditHistory(order_id, status_id, initiator_id, cbFunc) {
+  const sql = `INSERT INTO audit_history (order_id, status_id, performed_at, initiator_id)
+  VALUES ($1, $2, NOW(), $3)`;
+
+  pgPool.query(sql, [order_id, status_id, initiator_id], (response) => {
     cbFunc(response);
   });
 }

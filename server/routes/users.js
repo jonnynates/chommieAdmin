@@ -1,9 +1,6 @@
-var express = require('express');
-var router = express.Router();
+module.exports = (router, app, user) => {
+  router.get("/", app.oauth.authorise(), user.getAllUsers);
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+  return router;
+};
 
-module.exports = router;

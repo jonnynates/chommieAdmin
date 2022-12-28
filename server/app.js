@@ -38,6 +38,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const authenticator = require("./auth/authenticator")(userDB);
 const order = require("./services/order")(orderDB);
 const kit = require("./services/kit")(kitDB);
+const user = require("./services/user")(userDB);
 const authRoutes = require("./routes/auth")(
   express.Router(),
   app,
@@ -46,9 +47,11 @@ const authRoutes = require("./routes/auth")(
 );
 const orderRoutes = require("./routes/orders")(express.Router(), app, order);
 const kitRoutes = require("./routes/kits")(express.Router(), app, kit);
+const userRoutes = require("./routes/users")(express.Router(), app, user);
 app.use("/auth", authRoutes);
 app.use("/orders", orderRoutes);
 app.use("/kits", kitRoutes);
+app.use("/users", userRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

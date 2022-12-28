@@ -7,13 +7,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function RequestDropdown({ order }) {
-  //   let navigate = useNavigate();
-
-  //   const redirectOrderInfo = (id) => {
-  //     navigate(`orders/${id}`);
-  //   };
-
+export default function RequestDropdown({
+  currentOrder,
+  setCurrentOrder,
+  setOpen,
+}) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -37,7 +35,7 @@ export default function RequestDropdown({ order }) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href={`orders/${order.id}`}
+                  href={`orders/${currentOrder.id}`}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block px-4 py-2 text-sm"
@@ -50,7 +48,7 @@ export default function RequestDropdown({ order }) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href={`orders/${order.id}/edit`}
+                  href={`orders/${currentOrder.id}/edit`}
                   className={classNames(
                     active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                     "block px-4 py-2 text-sm"
@@ -58,6 +56,23 @@ export default function RequestDropdown({ order }) {
                 >
                   Edit
                 </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <span
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm"
+                  )}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setOpen(true);
+                    setCurrentOrder(currentOrder);
+                  }}
+                >
+                  Remove order
+                </span>
               )}
             </Menu.Item>
           </div>

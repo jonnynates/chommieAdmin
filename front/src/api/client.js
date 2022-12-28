@@ -9,6 +9,7 @@ class ClientAPI {
     this.token = token;
   }
 
+  //Auth
   signInUser(body) {
     return this.fetch("/auth/login", {
       method: "POST",
@@ -24,6 +25,7 @@ class ClientAPI {
     });
   }
 
+  //Orders
   getAllOrders() {
     return this.fetch("/orders", {
       method: "GET",
@@ -31,7 +33,7 @@ class ClientAPI {
   }
 
   getOrdersForStatus(status_id) {
-    return this.fetch(`/orders/${status_id}`, {
+    return this.fetch(`/orders/status/${status_id}`, {
       method: "GET",
     });
   }
@@ -42,8 +44,29 @@ class ClientAPI {
     });
   }
 
+  deleteOrder(id) {
+    return this.fetch(`/orders/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  getOrderAuditHistory(id) {
+    return this.fetch(`/orders/${id}/history`, {
+      method: "GET",
+    });
+  }
+
+  //Kits
+
   getAllKits() {
     return this.fetch(`/kits`, {
+      method: "GET",
+    });
+  }
+
+  // Users
+  getAllUsers() {
+    return this.fetch(`/users`, {
       method: "GET",
     });
   }

@@ -6,6 +6,7 @@ module.exports = (injectedPgPool) => {
   return {
     register,
     getUser,
+    getAllUsers,
     isValidUser,
   };
 };
@@ -13,10 +14,7 @@ module.exports = (injectedPgPool) => {
 var crypto = require("crypto");
 
 function register(username, password, cbFunc) {
-  var shaPass = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+  var shaPass = crypto.createHash("sha256").update(password).digest("hex");
 
   const query = `INSERT INTO users (discord_name, password) VALUES ($1, $2)`;
 
@@ -24,10 +22,7 @@ function register(username, password, cbFunc) {
 }
 
 function getUser(username, password, cbFunc) {
-  var shaPass = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("hex");
+  var shaPass = crypto.createHash("sha256").update(password).digest("hex");
 
   const getUserQuery = `SELECT * FROM users WHERE discord_name = $1 AND password = $2`;
 
@@ -38,6 +33,14 @@ function getUser(username, password, cbFunc) {
         ? response.results.rows[0]
         : null
     );
+  });
+}
+
+function getAllUsers(cbFunc) {
+  const getUserQuery = `SELECT id, discord_name, discord_id, first_name, last_name, email FROM users WHERE discord_name != 'ChommieBot'`;
+
+  pgPool.query(getUserQuery, [], (response) => {
+    cbFunc(response.results.rows);
   });
 }
 
