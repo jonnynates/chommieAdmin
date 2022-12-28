@@ -66,10 +66,11 @@ export default function Requests() {
     }
 
     return orders.filter((o) => {
-      var kit = o.grade + " " + o.name;
+      var kit = o.product_line_name + " " + o.name;
       return (
         o.discord_name.toLowerCase().includes(searchString.toLowerCase()) ||
-        kit.toLowerCase().includes(searchString.toLowerCase())
+        kit.toLowerCase().includes(searchString.toLowerCase()) ||
+        o.description.toLowerCase().includes(searchString.toLowerCase())
       );
     });
   }, [orders, searchString]);
@@ -182,7 +183,7 @@ export default function Requests() {
                             {order.discord_name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.grade + " " + order.name}
+                            {order.product_line_name + " " + order.name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {order.hlj_ref}

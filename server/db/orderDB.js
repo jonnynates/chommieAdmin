@@ -14,10 +14,11 @@ module.exports = (injectedPgPool) => {
 };
 
 function getAllOrders(cbFunc) {
-  const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref from orders o
+  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref from orders o
     left join kits k on k.id = o.product_id
     left join users u on u.id = o.user_id
     left join order_statuses os on os.id = o.status
+    left join product_lines pl on pl.id = k.product_line
     where o.status != 9
     order BY u.discord_name DESC`;
 
@@ -27,10 +28,11 @@ function getAllOrders(cbFunc) {
 }
 
 function getRequestsForStatusId(status_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref from orders o
+  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref from orders o
       left join kits k on k.id = o.product_id
       left join users u on u.id = o.user_id
       left join order_statuses os on os.id = o.status
+      left join product_lines pl on pl.id = k.product_line
       where o.status = $1
       order BY u.discord_name DESC`;
 
@@ -40,10 +42,11 @@ function getRequestsForStatusId(status_id, cbFunc) {
 }
 
 function getOrderDetails(order_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, k.grade, k.name, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
+  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
   left join kits k on k.id = o.product_id
   left join users u on u.id = o.user_id
   left join order_statuses os on os.id = o.status
+  left join product_lines pl on pl.id = k.product_line
   where o.id = $1
   order BY u.discord_name DESC`;
 

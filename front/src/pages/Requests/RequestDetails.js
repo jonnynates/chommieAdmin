@@ -94,7 +94,7 @@ export default function RequestDetails() {
                       Product
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {order.grade + " " + order.name}
+                      {order.product_line_name + " " + order.name}
                     </dd>
                   </div>
                   <div className="sm:col-span-1">

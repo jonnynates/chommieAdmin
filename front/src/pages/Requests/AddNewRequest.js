@@ -76,7 +76,7 @@ function AddNewRequest() {
                           options={kits}
                           // groupBy={(option) => option.grade}
                           getOptionLabel={(option) => {
-                            return option.grade + " " + option.name;
+                            return option.product_line_name + " " + option.name;
                           }}
                           filterOptions={(options, params) => {
                             // const kit = option.grade + " " + option.name
@@ -92,7 +92,7 @@ function AddNewRequest() {
                             return filtered;
                           }}
                           renderOption={(props, option) => (
-                            <li {...props}>{option.grade} {option.name}</li>
+                            <li {...props}>{option.product_line_name} {option.name}</li>
                           )}
                           sx={{ width: 300 }}
                           renderInput={(params) => (

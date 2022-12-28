@@ -39,7 +39,7 @@ function Kits() {
     }
 
     return kits.filter((k) => {
-      var kit = k.grade + " " + k.name;
+      var kit = k.product_line_name + " " + k.name;
       return kit.toLowerCase().includes(searchString.toLowerCase());
     });
   }, [kits, searchString]);
@@ -120,7 +120,7 @@ function Kits() {
                       {filterKits.map((kit) => (
                         <tr key={kit.id}>
                           <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                            {kit.grade}
+                            {kit.product_line_name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {kit.name}
