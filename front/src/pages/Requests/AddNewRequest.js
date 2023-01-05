@@ -8,11 +8,16 @@ function AddNewRequest() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [users, setUsers] = useState([]);
   const [kits, setKits] = useState([]);
+  const [product_lines, setProductLines] = useState([]);
+  const [product_line, setProductLine] = useState([]);
+
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
   const filter = createFilterOptions();
 
   useEffect(() => {
     fetchUsers();
     fetchAllKits();
+    fetchAllProductLines();
   }, []);
 
   const fetchUsers = () => {
@@ -37,6 +42,21 @@ function AddNewRequest() {
         (result) => {
           setIsLoaded(true);
           setKits(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  };
+
+  const fetchAllProductLines = () => {
+    Client.getAllProductLines()
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setProductLines(result);
         },
         (error) => {
           setIsLoaded(true);
@@ -72,31 +92,12 @@ function AddNewRequest() {
                       <div className="col-span-6 sm:col-span-3">
                         <Autocomplete
                           disablePortal
-                          id="kits-combo-box"
-                          options={kits}
-                          // groupBy={(option) => option.grade}
-                          getOptionLabel={(option) => {
-                            return option.product_line_name + " " + option.name;
-                          }}
-                          filterOptions={(options, params) => {
-                            // const kit = option.grade + " " + option.name
-             
-                            const filtered = filter(options, params);
-                            // if (params.inputValue !== "") {
-                            //   filtered.push({
-                            //     inputValue: params.inputValue,
-                            //     discord_name: `Add "${params.inputValue}"`,
-                            //   });
-                            // }
-
-                            return filtered;
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props}>{option.product_line_name} {option.name}</li>
-                          )}
+                          id="product-line-combo-box"
+                          options={product_lines}
+                          getOptionLabel={(option) => option.product_line_name}
                           sx={{ width: 300 }}
                           renderInput={(params) => (
-                            <TextField {...params} label="Customer Name" />
+                            <TextField {...params} label="Product Lines" />
                           )}
                         />
                       </div>

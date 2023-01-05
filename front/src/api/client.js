@@ -64,6 +64,12 @@ class ClientAPI {
     });
   }
 
+  getAllProductLines() {
+    return this.fetch(`/kits/product_lines`, {
+      method: "GET",
+    });
+  }
+
   // Users
   getAllUsers() {
     return this.fetch(`/users`, {

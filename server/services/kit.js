@@ -5,8 +5,8 @@ module.exports = (injectedOrderDB) => {
 
   return {
     getAllKits,
-    getAllGrades,
-    getKitByGrade,
+    getAllProductLines,
+    getKitByProductLine,
   };
 };
 
@@ -16,14 +16,15 @@ function getAllKits(req, res) {
   });
 }
 
-function getAllGrades(req, res) {
-  kitDB.getAllGrades((response) => {
+function getAllProductLines(req, res) {
+  kitDB.getAllProductLines((response) => {
     res.send(response.results.rows);
   });
 }
 
-function getKitByGrade(req, res) {
-  kitDB.getKitByGrade(req.params.grade, (response) => {
+function getKitByProductLine(req, res) {
+  console.log("req", req.params.product_line_name);
+  kitDB.getKitByProductLine(req.params.product_line_name, (response) => {
     res.send(response.results.rows);
   });
 }
