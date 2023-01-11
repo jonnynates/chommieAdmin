@@ -5,6 +5,7 @@ module.exports = (router, app, order) => {
   router.get("/:id", app.oauth.authorise(), order.getOrderDetails);
   router.delete("/:id", app.oauth.authorise(), order.deleteOrder);
   router.get("/:id/history", app.oauth.authorise(), order.getOrderAuditHistory);
+  router.post("/new", app.oauth.authorise(), order.createNewOrder);
   
 
   return router;

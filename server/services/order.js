@@ -1,3 +1,5 @@
+const order_statuses = require("../db/order_statuses");
+
 let orderDB;
 
 module.exports = (injectedOrderDB) => {
@@ -10,6 +12,7 @@ module.exports = (injectedOrderDB) => {
     getOrderDetails,
     getOrderAuditHistory,
     deleteOrder,
+    createNewOrder,
   };
 };
 
@@ -41,26 +44,70 @@ function deleteOrder(req, res) {
   orderDB.softDeleteOrder(req.params.id, (response) => {
     const error = response.error;
     if (error !== undefined) {
-      res.status(400).json({
+      res.status(500).json({
         message: `Something went wrong when deleting order ${req.params.id}`,
         error: error,
       });
       return;
     }
 
-    orderDB.createAuditHistory(req.params.id, 9, req.user.id, (response) => {
+    orderDB.createAuditHistory(
+      req.params.id,
+      order_statuses.REMOVED,
+      req.user.id,
+      (response) => {
+        const error = response.error;
+        if (error !== undefined) {
+          res.status(500).json({
+            message: `Something went when creating an audit history for order ${req.params.id}`,
+            error: error,
+          });
+          return;
+        }
+
+        res.status(200).json({
+          message: "Success",
+        });
+      }
+    );
+  });
+}
+
+function createNewOrder(req, res) {
+  orderDB.createNewOrder(
+    req.body.user_id,
+    req.body.product_id,
+    req.body.notes,
+    (response) => {
       const error = response.error;
       if (error !== undefined) {
-        res.status(400).json({
-          message: `Something went when creating an audit history for order ${req.params.id}`,
+        res.status(500).json({
+          message: `Something went wrong when creating new order`,
           error: error,
         });
         return;
       }
+      const order_id = response.results.rows[0].id;
 
-      res.status(200).json({
-        message: "Success",
-      });
-    });
-  });
+      orderDB.createAuditHistory(
+        order_id,
+        order_statuses.NEW_REQUEST,
+        req.user.id,
+        (response) => {
+          const error = response.error;
+          if (error !== undefined) {
+            res.status(500).json({
+              message: `Something went when creating an audit history for new order`,
+              error: error,
+            });
+            return;
+          }
+
+          res.status(200).json({
+            message: "Success",
+          });
+        }
+      );
+    }
+  );
 }

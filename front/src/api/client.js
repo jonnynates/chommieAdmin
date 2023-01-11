@@ -56,6 +56,13 @@ class ClientAPI {
     });
   }
 
+  createNewOrder(body) {
+    return this.fetch(`/orders/new`, {
+      method: "POST",
+      body,
+    });
+  }
+
   //Kits
 
   getAllKits() {
@@ -70,10 +77,23 @@ class ClientAPI {
     });
   }
 
+  getKitsByProductLine(product_line_name) {
+    return this.fetch(`/kits/product_lines/${product_line_name}`, {
+      method: "GET",
+    });
+  }
+
   // Users
   getAllUsers() {
     return this.fetch(`/users`, {
       method: "GET",
+    });
+  }
+
+  createUser(body) {
+    return this.fetch(`/users/new`, {
+      method: "POST",
+      body,
     });
   }
 

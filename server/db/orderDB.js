@@ -1,3 +1,5 @@
+const order_statuses = require("./order_statuses");
+
 let pgPool;
 
 module.exports = (injectedPgPool) => {
@@ -10,6 +12,7 @@ module.exports = (injectedPgPool) => {
     getOrderAuditHistory,
     softDeleteOrder,
     createAuditHistory,
+    createNewOrder,
   };
 };
 
@@ -20,7 +23,7 @@ function getAllOrders(cbFunc) {
     left join order_statuses os on os.id = o.status
     left join product_lines pl on pl.id = k.product_line
     where o.status != 9
-    order BY u.discord_name DESC`;
+    order BY o.date_requested DESC`;
 
   pgPool.query(sql, [], (response) => {
     cbFunc(response);
@@ -34,7 +37,7 @@ function getRequestsForStatusId(status_id, cbFunc) {
       left join order_statuses os on os.id = o.status
       left join product_lines pl on pl.id = k.product_line
       where o.status = $1
-      order BY u.discord_name DESC`;
+      order BY o.date_requested DESC`;
 
   pgPool.query(sql, [status_id], (response) => {
     cbFunc(response);
@@ -82,4 +85,16 @@ function createAuditHistory(order_id, status_id, initiator_id, cbFunc) {
   pgPool.query(sql, [order_id, status_id, initiator_id], (response) => {
     cbFunc(response);
   });
+}
+
+function createNewOrder(user_id, product_id, notes, cbFunc) {
+  const sql = `INSERT INTO orders (user_id, product_id, date_requested, status, notes) VALUES ($1, $2, NOW(), $3, $4) RETURNING id`;
+
+  pgPool.query(
+    sql,
+    [user_id, product_id, order_statuses.NEW_REQUEST, notes],
+    (response) => {
+      cbFunc(response);
+    }
+  );
 }
