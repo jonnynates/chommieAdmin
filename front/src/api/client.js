@@ -63,8 +63,14 @@ class ClientAPI {
     });
   }
 
-  //Kits
+  updateOrder(order_id, body) {
+    return this.fetch(`/orders/${order_id}`, {
+      method: "PATCH",
+      body,
+    });
+  }
 
+  //Kits
   getAllKits() {
     return this.fetch(`/kits`, {
       method: "GET",

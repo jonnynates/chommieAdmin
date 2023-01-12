@@ -7,12 +7,12 @@ module.exports = (injectedOrderDB) => {
 
   return {
     getAllOrders,
-    // getNewRequests,
     getRequestsForStatus,
     getOrderDetails,
     getOrderAuditHistory,
     deleteOrder,
     createNewOrder,
+    updateOrder,
   };
 };
 
@@ -110,4 +110,34 @@ function createNewOrder(req, res) {
       );
     }
   );
+}
+
+async function updateOrder(req, res) {
+  try {
+    const order_id = req.params.id;
+    orderDB.getOrderDetails(order_id, (response) => {
+      console.log("ord", response.results.rows[0]);
+      const oldOrder = response.results.rows[0];
+
+      orderDB.updateOrder(order_id, req.body.status_id, req.body.notes, () => {
+        if (req.body.status_id !== oldOrder.status_id) {
+          orderDB.createAuditHistory(
+            order_id,
+            req.body.status_id,
+            req.user.id,
+            () => {}
+          );
+        }
+        res.status(200).json({
+          message: "Success",
+        });
+      });
+    });
+  } catch (e) {
+    res.status(500).json({
+      message: `Something went wrong when trying to update an order`,
+      error: e,
+    });
+    return;
+  }
 }

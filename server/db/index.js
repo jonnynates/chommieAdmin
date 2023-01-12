@@ -16,6 +16,7 @@ module.exports = {
       const duration = Date.now() - start;
       if (err) {
         console.log(err);
+        console.log(text);
       }
       console.log("executed query", { text, duration, rows: res.rowCount });
       callback(setResponse(err, res));

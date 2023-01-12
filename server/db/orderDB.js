@@ -13,6 +13,7 @@ module.exports = (injectedPgPool) => {
     softDeleteOrder,
     createAuditHistory,
     createNewOrder,
+    updateOrder,
   };
 };
 
@@ -45,7 +46,7 @@ function getRequestsForStatusId(status_id, cbFunc) {
 }
 
 function getOrderDetails(order_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
+  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.id as status_id, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
   left join kits k on k.id = o.product_id
   left join users u on u.id = o.user_id
   left join order_statuses os on os.id = o.status
@@ -97,4 +98,12 @@ function createNewOrder(user_id, product_id, notes, cbFunc) {
       cbFunc(response);
     }
   );
+}
+
+function updateOrder(order_id, status_id, notes, cbFunc) {
+  const sql = `UPDATE orders SET status = $1, notes = $2 WHERE id = $3`;
+
+  pgPool.query(sql, [status_id, notes, order_id], (response) => {
+    cbFunc(response);
+  });
 }

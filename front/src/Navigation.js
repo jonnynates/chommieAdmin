@@ -11,6 +11,7 @@ import useLocalStorage, { TOKEN_STORAGE_KEY } from "./hooks/useLocalStorage";
 import useAuthUser from "./hooks/useAuthUser";
 import Kits from "./pages/Kits";
 import AddNewRequest from "./pages/Requests/AddNewRequest";
+import EditRequest from "./pages/Requests/EditRequest";
 
 export default function Navigation() {
   const [hasPerformedInitialLoad, setHasPerformedInitialLoad] = useState(false);
@@ -41,6 +42,7 @@ export default function Navigation() {
             <Route path="/new-requests" element={<Requests />} />
             <Route path="/requests" element={<Requests />} />
             <Route path="/orders/:id" element={<RequestDetails />} />
+            <Route path="/orders/:id/edit" element={<EditRequest />} />
             <Route path="/orders/new" element={<AddNewRequest />} />
             <Route path="/kits" element={<Kits />} />
             <Route path="/home" element={<Home />} />
