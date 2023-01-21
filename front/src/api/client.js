@@ -70,6 +70,12 @@ class ClientAPI {
     });
   }
 
+  getOrderQueue(order_id) {
+    return this.fetch(`/orders/kit/${order_id}/queue`, {
+      method: "GET",
+    });
+  }
+
   //Kits
   getAllKits() {
     return this.fetch(`/kits`, {
@@ -86,6 +92,13 @@ class ClientAPI {
   getKitsByProductLine(product_line_name) {
     return this.fetch(`/kits/product_lines/${product_line_name}`, {
       method: "GET",
+    });
+  }
+
+  createKit(body) {
+    return this.fetch(`/kits/new`, {
+      method: "POST",
+      body,
     });
   }
 

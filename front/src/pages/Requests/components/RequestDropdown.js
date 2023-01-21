@@ -10,7 +10,9 @@ function classNames(...classes) {
 export default function RequestDropdown({
   currentOrder,
   setCurrentOrder,
-  setOpen,
+  setCurrentProduct,
+  setDeleteOpen,
+  setQueueOpen,
 }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -67,11 +69,33 @@ export default function RequestDropdown({
                   )}
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    setOpen(true);
+                    setDeleteOpen(true);
                     setCurrentOrder(currentOrder);
                   }}
                 >
                   Remove order
+                </span>
+              )}
+            </Menu.Item>
+
+            <Menu.Item>
+              {({ active }) => (
+                <span
+                  className={classNames(
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm"
+                  )}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setQueueOpen(true);
+                    setCurrentProduct(
+                      currentOrder.product_id,
+                      currentOrder.product_line_name,
+                      currentOrder.name
+                    );
+                  }}
+                >
+                  Kit Queue
                 </span>
               )}
             </Menu.Item>

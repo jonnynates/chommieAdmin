@@ -12,6 +12,7 @@ import useAuthUser from "./hooks/useAuthUser";
 import Kits from "./pages/Kits";
 import AddNewRequest from "./pages/Requests/AddNewRequest";
 import EditRequest from "./pages/Requests/EditRequest";
+import AddNewKit from "./pages/Kits/AddNewKit";
 
 export default function Navigation() {
   const [hasPerformedInitialLoad, setHasPerformedInitialLoad] = useState(false);
@@ -45,6 +46,7 @@ export default function Navigation() {
             <Route path="/orders/:id/edit" element={<EditRequest />} />
             <Route path="/orders/new" element={<AddNewRequest />} />
             <Route path="/kits" element={<Kits />} />
+            <Route path="/kits/new" element={<AddNewKit />} />
             <Route path="/home" element={<Home />} />
           </Route>
         </Route>

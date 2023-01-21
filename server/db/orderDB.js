@@ -14,11 +14,12 @@ module.exports = (injectedPgPool) => {
     createAuditHistory,
     createNewOrder,
     updateOrder,
+    getKitOrderQueue,
   };
 };
 
 function getAllOrders(cbFunc) {
-  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref from orders o
+  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
     left join kits k on k.id = o.product_id
     left join users u on u.id = o.user_id
     left join order_statuses os on os.id = o.status
@@ -32,7 +33,7 @@ function getAllOrders(cbFunc) {
 }
 
 function getRequestsForStatusId(status_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref from orders o
+  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
       left join kits k on k.id = o.product_id
       left join users u on u.id = o.user_id
       left join order_statuses os on os.id = o.status
@@ -104,6 +105,19 @@ function updateOrder(order_id, status_id, notes, cbFunc) {
   const sql = `UPDATE orders SET status = $1, notes = $2 WHERE id = $3`;
 
   pgPool.query(sql, [status_id, notes, order_id], (response) => {
+    cbFunc(response);
+  });
+}
+
+function getKitOrderQueue(product_id, cbFunc) {
+  const sql = `select u.discord_name, os.description, o.date_requested from orders o
+  left join users u on u.id = o.user_id
+  left join order_statuses os on os.id = o.status
+  where o.product_id = $1
+  and o.date_removed IS NULL
+  order by date_requested `;
+
+  pgPool.query(sql, [product_id], (response) => {
     cbFunc(response);
   });
 }

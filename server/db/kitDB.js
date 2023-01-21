@@ -7,6 +7,7 @@ module.exports = (injectedPgPool) => {
     getAllKits,
     getAllProductLines,
     getKitByProductLine,
+    createKit,
   };
 };
 
@@ -35,4 +36,23 @@ function getKitByProductLine(product_line_name, cbFunc) {
   pgPool.query(sql, [product_line_name], (response) => {
     cbFunc(response);
   });
+}
+
+function createKit(
+  name,
+  product_line,
+  premium_bandai,
+  price,
+  sku_code,
+  cbFunc
+) {
+  const sql = `INSERT INTO kits (name, product_line, premium_bandai, price, hlj_ref) VALUES ($1, $2, $3, $4, $5)`;
+
+  pgPool.query(
+    sql,
+    [name, product_line, premium_bandai, price, sku_code],
+    (response) => {
+      cbFunc(response);
+    }
+  );
 }

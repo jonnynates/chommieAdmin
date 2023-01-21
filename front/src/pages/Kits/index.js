@@ -1,14 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Search } from "react-feather";
-import Status from "../../components/Status";
-// import RequestDropdown from "./components/RequestDropdown";
 import { Client } from "../../api";
-import RequestDropdown from "../Requests/components/RequestDropdown";
-var moment = require("moment");
 
 function Kits() {
-  let location = useLocation();
+  let navigate = useNavigate();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [kits, setKits] = useState([]);
@@ -64,6 +60,7 @@ function Kits() {
                   id="email"
                   className="h-8 block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="Search"
+                  autoComplete="off"
                   onChange={(e) => setSearchString(e.target.value)}
                 />
               </div>
@@ -71,6 +68,7 @@ function Kits() {
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
               <button
                 type="button"
+                onClick={() => navigate("/kits/new")}
                 className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
               >
                 Add Kit
@@ -108,12 +106,6 @@ function Kits() {
                         >
                           Price
                         </th>
-                        <th
-                          scope="col"
-                          className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                        >
-                          <span className="sr-only">Edit</span>
-                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -130,9 +122,6 @@ function Kits() {
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
                             {kit.price}
-                          </td>
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <RequestDropdown order={kit} />
                           </td>
                         </tr>
                       ))}

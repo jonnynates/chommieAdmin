@@ -6,15 +6,22 @@ import RequestDropdown from "./components/RequestDropdown";
 import { ApiError, Client, DEFAULT_SERVER_ERROR_MESSAGE } from "../../api";
 import orderStatuses from "../../utils/orderStatuses";
 import RemoveOrderConfirmation from "./components/RemoveOrderConfirmation";
+import QueueModal from "./components/QueueModal";
 var moment = require("moment");
 
 export default function Requests() {
   let location = useLocation();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [queueOpen, setQueueOpen] = useState(false);
   const [orders, setOrders] = useState([]);
   const [currentOrder, setCurrentOrder] = useState(null);
+  const [currentProduct, setCurrentProduct] = useState({
+    id: null,
+    product_line: "",
+    product_name: "",
+  });
   const [searchString, setSearchString] = useState("");
   const [title, setTitle] = useState("");
   const [serverErrorMessage, setServerErrorMessage] = useState("");
@@ -87,8 +94,12 @@ export default function Requests() {
         setServerErrorMessage(DEFAULT_SERVER_ERROR_MESSAGE);
       }
     } finally {
-      setOpen(false);
+      setDeleteOpen(false);
     }
+  };
+
+  const handleSelectProduct = (id, product_line, product_name) => {
+    setCurrentProduct({ id, product_line, product_name });
   };
 
   return (
@@ -96,9 +107,14 @@ export default function Requests() {
       {Boolean(orders) && (
         <div className="mt-5 x-4 sm:px-6 lg:px-8">
           <RemoveOrderConfirmation
-            open={open}
-            setOpen={setOpen}
+            open={deleteOpen}
+            setOpen={setDeleteOpen}
             deleteOrder={deleteOrder}
+          />
+          <QueueModal
+            open={queueOpen}
+            setOpen={setQueueOpen}
+            currentProduct={currentProduct}
           />
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
@@ -117,6 +133,7 @@ export default function Requests() {
                   id="email"
                   className="h-8 block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="Search"
+                  autoComplete="off"
                   onChange={(e) => setSearchString(e.target.value)}
                 />
               </div>
@@ -166,6 +183,12 @@ export default function Requests() {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
+                          Queue
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
                           Status
                         </th>
                         <th
@@ -194,14 +217,18 @@ export default function Requests() {
                             )}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
+                            {order.queue}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm">
                             <Status name={order.description} />
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <RequestDropdown
                               currentOrder={order}
                               setCurrentOrder={setCurrentOrder}
-                              setOpen={setOpen}
-                              deleteOrder={deleteOrder}
+                              setCurrentProduct={handleSelectProduct}
+                              setDeleteOpen={setDeleteOpen}
+                              setQueueOpen={setQueueOpen}
                             />
                           </td>
                         </tr>

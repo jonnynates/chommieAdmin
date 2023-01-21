@@ -7,7 +7,8 @@ const orderStatuses = {
   Paid: { id: 6, name: "Paid" },
   Passed: { id: 7, name: "Passed" },
   NewRequest: { id: 8, name: "New Request" },
-  WishlistedWithSupplier: { id: 9, name: "Wishlisted With Supplier" },
+  Removed: { id: 0, name: "Removed" },
+  WishlistedWithSupplier: { id: 10, name: "Wishlisted With Supplier" },
 };
 
 export default orderStatuses;

@@ -13,6 +13,7 @@ module.exports = (injectedOrderDB) => {
     deleteOrder,
     createNewOrder,
     updateOrder,
+    getKitOrderQueue,
   };
 };
 
@@ -140,4 +141,10 @@ async function updateOrder(req, res) {
     });
     return;
   }
+}
+
+function getKitOrderQueue(req, res) {
+  orderDB.getKitOrderQueue(req.params.id, (response) => {
+    res.send(response.results.rows);
+  });
 }

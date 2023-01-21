@@ -8,4 +8,5 @@ module.exports = Object.freeze({
   PASSED: 7,
   NEW_REQUEST: 8,
   REMOVED: 9,
+  WISHLISTED_WITH_SUPPLIER: 10,
 });

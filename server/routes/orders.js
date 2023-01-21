@@ -6,6 +6,7 @@ module.exports = (router, app, order) => {
   router.patch("/:id", app.oauth.authorise(), order.updateOrder);
   router.get("/:id/history", app.oauth.authorise(), order.getOrderAuditHistory);
   router.post("/new", app.oauth.authorise(), order.createNewOrder);
+  router.get("/kit/:id/queue", app.oauth.authorise(), order.getKitOrderQueue);
 
   return router;
 };
