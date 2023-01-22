@@ -36,7 +36,8 @@ function Kits() {
 
     return kits.filter((k) => {
       var kit = k.product_line_name + " " + k.name;
-      return kit.toLowerCase().includes(searchString.toLowerCase());
+      const searchWords = searchString.toLowerCase().split(" ");
+      return searchWords.every((word) => kit.toLowerCase().includes(word));
     });
   }, [kits, searchString]);
   return (
