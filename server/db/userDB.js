@@ -49,7 +49,8 @@ function getUserById(id, cbFunc) {
 
 function getAllUsers(cbFunc) {
   const getUserQuery = `SELECT id, discord_name, discord_id, first_name, last_name, email, phone_number FROM users 
-  WHERE discord_name != 'ChommieBot'`;
+  WHERE discord_name != 'ChommieBot'
+  ORDER BY discord_name`;
 
   pgPool.query(getUserQuery, [], (response) => {
     cbFunc(response.results.rows);
