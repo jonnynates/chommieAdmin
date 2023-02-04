@@ -13,6 +13,8 @@ import Kits from "./pages/Kits";
 import AddNewRequest from "./pages/Requests/AddNewRequest";
 import EditRequest from "./pages/Requests/EditRequest";
 import AddNewKit from "./pages/Kits/AddNewKit";
+import Users from "./pages/Users";
+import UserForm from "./pages/Users/UserForm";
 
 export default function Navigation() {
   const [hasPerformedInitialLoad, setHasPerformedInitialLoad] = useState(false);
@@ -48,6 +50,9 @@ export default function Navigation() {
             <Route path="/kits" element={<Kits />} />
             <Route path="/kits/new" element={<AddNewKit />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/new" element={<UserForm />} />
+            <Route path="/users/:id/edit" element={<UserForm />} />
           </Route>
         </Route>
 

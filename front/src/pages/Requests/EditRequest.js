@@ -76,61 +76,57 @@ function EditRequest() {
               </div>
             </div>
             <div className="mt-5 md:col-span-2 md:mt-0">
-              <form onSubmit={updateOrder}>
-                <div className="overflow-hidden shadow sm:rounded-md">
-                  <div className="bg-white px-4 py-5 sm:p-6">
-                    <div className="grid grid-cols-6 gap-6">
-                      <div className="col-span-6 sm:col-span-3">
-                        <FormControl sx={{ minWidth: 120 }}>
-                          <InputLabel id="demo-simple-select-helper-label">
-                            Status
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            value={status}
-                            label="Status"
-                            onChange={handleChange}
-                          >
-                            {statuses.map((status) => (
-                              <MenuItem value={status.id}>
-                                {status.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText>
-                            Old status: {order.description}
-                          </FormHelperText>
-                        </FormControl>
-                      </div>
+              <div className="overflow-hidden shadow sm:rounded-md">
+                <div className="bg-white px-4 py-5 sm:p-6">
+                  <div className="grid grid-cols-6 gap-6">
+                    <div className="col-span-6 sm:col-span-3">
+                      <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel id="demo-simple-select-helper-label">
+                          Status
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-helper-label"
+                          id="demo-simple-select-helper"
+                          value={status}
+                          label="Status"
+                          onChange={handleChange}
+                        >
+                          {statuses.map((status) => (
+                            <MenuItem value={status.id}>{status.name}</MenuItem>
+                          ))}
+                        </Select>
+                        <FormHelperText>
+                          Old status: {order.description}
+                        </FormHelperText>
+                      </FormControl>
+                    </div>
 
-                      <div className="col-span-6 sm:col-span-6">
-                        <p className="text-md font-medium leading-6 text-gray-500">
-                          Add additional notes
-                        </p>
-                        <textarea
-                          rows={4}
-                          name="comment"
-                          id="comment"
-                          className="block w-full rounded-md border-solid border border-gray-300 focus:border-gray-300 focus:ring-gray-300 focus-visible:outline-none p-3 resize-none"
-                          defaultValue={order.notes}
-                          onChange={(event) => {
-                            setNote(event.target.value);
-                          }}
-                        />
-                      </div>
+                    <div className="col-span-6 sm:col-span-6">
+                      <p className="text-md font-medium leading-6 text-gray-500">
+                        Add additional notes
+                      </p>
+                      <textarea
+                        rows={4}
+                        name="comment"
+                        id="comment"
+                        className="block w-full rounded-md border-solid border border-gray-300 focus:border-gray-300 focus:ring-gray-300 focus-visible:outline-none p-3 resize-none"
+                        defaultValue={order.notes}
+                        onChange={(event) => {
+                          setNote(event.target.value);
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-                    <button
-                      className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      type="submit"
-                    >
-                      Update Order
-                    </button>
-                  </div>
                 </div>
-              </form>
+                <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
+                  <button
+                    className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={updateOrder}
+                  >
+                    Update Order
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

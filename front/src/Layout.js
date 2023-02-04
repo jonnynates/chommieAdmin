@@ -22,6 +22,7 @@ export default function Layout() {
     { name: "Requests", href: "/requests", current: true },
     { name: "Stats", href: "/home", current: false },
     { name: "Kits", href: "/kits", current: false },
+    { name: "Customers", href: "/users", current: false },
   ]);
 
   useEffect(() => {

@@ -103,9 +103,23 @@ class ClientAPI {
   }
 
   // Users
+
   getAllUsers() {
     return this.fetch(`/users`, {
       method: "GET",
+    });
+  }
+
+  getUserById(id) {
+    return this.fetch(`/users/${id}`, {
+      method: "GET",
+    });
+  }
+
+  updateUser(id, body) {
+    return this.fetch(`/users/${id}`, {
+      method: "PATCH",
+      body,
     });
   }
 

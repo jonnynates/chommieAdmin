@@ -26,6 +26,20 @@
   color: rgb(0 51 0 / var(--tw-text-opacity));
 }
 
+.text-status-passed {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
+}
+
+.text-status-ordered {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 199 102 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 98 0 / var(--tw-text-opacity));
+}
+
 .text-status-red {
   --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
