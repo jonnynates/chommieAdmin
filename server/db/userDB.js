@@ -17,7 +17,10 @@ module.exports = (injectedPgPool) => {
 var crypto = require("crypto");
 
 function register(username, password, cbFunc) {
-  var shaPass = crypto.createHash("sha256").update(password).digest("hex");
+  var shaPass = crypto
+    .createHash("sha256")
+    .update(password)
+    .digest("hex");
 
   const query = `INSERT INTO users (discord_name, password) VALUES ($1, $2)`;
 
@@ -25,7 +28,10 @@ function register(username, password, cbFunc) {
 }
 
 function getUser(username, password, cbFunc) {
-  var shaPass = crypto.createHash("sha256").update(password).digest("hex");
+  var shaPass = crypto
+    .createHash("sha256")
+    .update(password)
+    .digest("hex");
 
   const getUserQuery = `SELECT * FROM users WHERE discord_name = $1 AND password = $2`;
 
@@ -72,7 +78,7 @@ function isValidUser(username, cbFunc) {
 }
 
 function createNewUser(user, cbFunc) {
-  const query = `INSERT INTO users (discord_name, discord_id, first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4, $5, $6)`;
+  const query = `INSERT INTO users (discord_name, discord_id, first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id `;
 
   pgPool.query(
     query,
@@ -84,7 +90,9 @@ function createNewUser(user, cbFunc) {
       user.email,
       user.phone_number,
     ],
-    cbFunc
+    (response) => {
+      cbFunc(response);
+    }
   );
 }
 

@@ -52,6 +52,7 @@ export default function UserComboBox({ users, customer, setCustomer }) {
       .then((res) => res.json())
       .then((result) => {
         setCustomer({
+          id: result.results.rows[0].id,
           discord_name: values.discord_name,
           discord_id: values.discord_id,
           first_name: values.first_name,

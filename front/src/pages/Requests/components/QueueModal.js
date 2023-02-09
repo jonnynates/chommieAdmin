@@ -8,8 +8,6 @@ export default function QueueModal({ open, setOpen, currentProduct }) {
   const cancelButtonRef = useRef(null);
   const [queue, setQueue] = useState(null);
 
-  console.log(currentProduct);
-
   useEffect(() => {
     if (currentProduct.id !== null) {
       getOrderQueue();
