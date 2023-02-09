@@ -117,7 +117,6 @@ async function updateOrder(req, res) {
   try {
     const order_id = req.params.id;
     orderDB.getOrderDetails(order_id, (response) => {
-      console.log("ord", response.results.rows[0]);
       const oldOrder = response.results.rows[0];
 
       orderDB.updateOrder(order_id, req.body.status_id, req.body.notes, () => {
