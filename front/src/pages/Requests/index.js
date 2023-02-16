@@ -74,9 +74,11 @@ export default function Requests() {
 
     return orders.filter((o) => {
       var kit = o.product_line_name + " " + o.name;
+      const searchWords = searchString.toLowerCase().split(" ");
+
       return (
         o.discord_name.toLowerCase().includes(searchString.toLowerCase()) ||
-        kit.toLowerCase().includes(searchString.toLowerCase()) ||
+        searchWords.every((word) => kit.toLowerCase().includes(word)) ||
         o.description.toLowerCase().includes(searchString.toLowerCase())
       );
     });
@@ -206,10 +208,32 @@ export default function Requests() {
                             {order.discord_name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.product_line_name + " " + order.name}
+                            {Boolean(order.gpsa_link !== null) ? (
+                              <a
+                                href={order.gpsa_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                {order.product_line_name + " " + order.name}
+                              </a>
+                            ) : (
+                              order.product_line_name + " " + order.name
+                            )}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {order.hlj_ref}
+                            {Boolean(order.supplier_link !== null) ? (
+                              <a
+                                href={order.supplier_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                {order.sku_code}
+                              </a>
+                            ) : (
+                              order.sku_code
+                            )}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                             {moment(order.date_requested).format(

@@ -19,7 +19,7 @@
   color: rgb(133 77 14 / var(--tw-text-opacity));
 }
 
-.text-status-paid {
+.text-status-fulfilled {
   --tw-bg-opacity: 1;
   background-color: rgb(153 255 153 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;

@@ -1,4 +1,6 @@
-import { Autocomplete, createFilterOptions, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import moment from "moment-timezone";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Client } from "../../api";
@@ -13,15 +15,14 @@ function AddNewRequest() {
   const [kit, setKit] = useState("");
   const [product_lines, setProductLines] = useState([]);
   const [product_line, setProductLine] = useState("");
+  const [date, setDate] = useState(moment());
   const [note, setNote] = useState("");
   const navigate = useNavigate();
-
-  const [serverErrorMessage, setServerErrorMessage] = useState("");
-  const filter = createFilterOptions();
 
   useEffect(() => {
     fetchUsers();
     fetchAllProductLines();
+    moment.tz.setDefault("Europe/Kiev"); // for GMT+2
   }, []);
 
   useEffect(() => {
@@ -79,6 +80,7 @@ function AddNewRequest() {
     const orderBody = {
       user_id: customer.id,
       product_id: kit.id,
+      request_date: moment(date).format("YYYY-MM-DD HH:mm:ss"),
       notes: note,
     };
     try {
@@ -153,6 +155,17 @@ function AddNewRequest() {
                         renderInput={(params) => (
                           <TextField {...params} label="Products" required />
                         )}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-4">
+                      <DateTimePicker
+                        label="Date&Time picker"
+                        value={date}
+                        onChange={(newValue) => {
+                          setDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
                       />
                     </div>
 

@@ -19,7 +19,8 @@ module.exports = (injectedPgPool) => {
 };
 
 function getAllOrders(cbFunc) {
-  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
+  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, 
+    k.sku_code, k.gpsa_link, k.supplier_link, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
     left join kits k on k.id = o.product_id
     left join users u on u.id = o.user_id
     left join order_statuses os on os.id = o.status
@@ -33,13 +34,14 @@ function getAllOrders(cbFunc) {
 }
 
 function getRequestsForStatusId(status_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, k.hlj_ref, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
-      left join kits k on k.id = o.product_id
-      left join users u on u.id = o.user_id
-      left join order_statuses os on os.id = o.status
-      left join product_lines pl on pl.id = k.product_line
-      where o.status = $1
-      order BY o.date_requested DESC`;
+  const sql = `select o.id, u.discord_name, o.product_id, pl.product_line_name, k.name, os.description, o.date_requested, 
+    k.sku_code, k.gpsa_link, k.supplier_link, ROW_NUMBER() OVER (PARTITION BY o.product_id ORDER BY o.date_requested) AS "queue" from orders o
+    left join kits k on k.id = o.product_id
+    left join users u on u.id = o.user_id
+    left join order_statuses os on os.id = o.status
+    left join product_lines pl on pl.id = k.product_line
+    where o.status = $1
+    order BY o.date_requested DESC`;
 
   pgPool.query(sql, [status_id], (response) => {
     cbFunc(response);
@@ -47,7 +49,7 @@ function getRequestsForStatusId(status_id, cbFunc) {
 }
 
 function getOrderDetails(order_id, cbFunc) {
-  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.id as status_id, os.description, o.date_requested, k.hlj_ref, o.notes, u.email, u.phone_number from orders o
+  const sql = `select o.id, u.discord_name, pl.product_line_name, k.name, os.id as status_id, os.description, o.date_requested, k.sku_code, k.gpsa_link, k.supplier_link, o.notes, u.email, u.phone_number from orders o
   left join kits k on k.id = o.product_id
   left join users u on u.id = o.user_id
   left join order_statuses os on os.id = o.status
@@ -89,12 +91,12 @@ function createAuditHistory(order_id, status_id, initiator_id, cbFunc) {
   });
 }
 
-function createNewOrder(user_id, product_id, notes, cbFunc) {
-  const sql = `INSERT INTO orders (user_id, product_id, date_requested, status, notes) VALUES ($1, $2, NOW(), $3, $4) RETURNING id`;
+function createNewOrder(user_id, product_id, request_date, notes, cbFunc) {
+  const sql = `INSERT INTO orders (user_id, product_id, date_requested, status, notes) VALUES ($1, $2, $3, $4, $5) RETURNING id`;
 
   pgPool.query(
     sql,
-    [user_id, product_id, order_statuses.NEW_REQUEST, notes],
+    [user_id, product_id, request_date, order_statuses.NEW_REQUEST, notes],
     (response) => {
       cbFunc(response);
     }

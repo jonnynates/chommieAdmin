@@ -12,7 +12,7 @@ module.exports = (injectedPgPool) => {
 };
 
 function getAllKits(cbFunc) {
-  const sql = `select k.id, pl.product_line_name, k.name, k.release_date, k.premium_bandai, k.price, k.series, k.dalong_ref, k.hlj_ref from kits k
+  const sql = `select k.id, pl.product_line_name, k.name, k.release_date, k.exclusive, k.price, k.dalong_ref, k.sku_code, k.gpsa_link, k.supplier_link from kits k
   left join product_lines pl on pl.id = k.product_line`;
   pgPool.query(sql, [], (response) => {
     cbFunc(response);
@@ -28,7 +28,7 @@ function getAllProductLines(cbFunc) {
 }
 
 function getKitByProductLine(product_line_name, cbFunc) {
-  const sql = `select k.id, pl.product_line_name, k.name, k.release_date, k.premium_bandai, k.price, k.series, k.dalong_ref, k.hlj_ref from kits k
+  const sql = `select k.id, pl.product_line_name, k.name, k.release_date, k.exclusive, k.price, k.dalong_ref, k.sku_code, k.gpsa_link, k.supplier_link from kits k
   left join product_lines pl on pl.id = k.product_line
   where pl.product_line_name = $1
   order BY k.name ASC`;
@@ -41,16 +41,16 @@ function getKitByProductLine(product_line_name, cbFunc) {
 function createKit(
   name,
   product_line,
-  premium_bandai,
+  exclusive,
   price,
   sku_code,
   cbFunc
 ) {
-  const sql = `INSERT INTO kits (name, product_line, premium_bandai, price, hlj_ref) VALUES ($1, $2, $3, $4, $5)`;
+  const sql = `INSERT INTO kits (name, product_line, exclusive, price, sku_code) VALUES ($1, $2, $3, $4, $5)`;
 
   pgPool.query(
     sql,
-    [name, product_line, premium_bandai, price, sku_code],
+    [name, product_line, exclusive, price, sku_code],
     (response) => {
       cbFunc(response);
     }

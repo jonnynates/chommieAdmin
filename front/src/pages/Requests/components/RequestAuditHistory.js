@@ -40,10 +40,12 @@ export default function RequestAuditHistory({ id }) {
       case "Backordered":
         return <Check className="h-5 w-5 text-white" aria-hidden="true" />;
       case "Ordered":
-        return <ShoppingCart className="h-5 w-5 text-white" aria-hidden="true" />;
+        return (
+          <ShoppingCart className="h-5 w-5 text-white" aria-hidden="true" />
+        );
       case "Reserved":
         return <Heart className="h-5 w-5 text-white" aria-hidden="true" />;
-      case "Paid":
+      case "Fulfilled":
         return <DollarSign className="h-5 w-5 text-white" aria-hidden="true" />;
       default:
         return null;
@@ -60,7 +62,7 @@ export default function RequestAuditHistory({ id }) {
         return "bg-gray-400";
       case "Reserved":
         return "bg-yellow-400";
-      case "Paid":
+      case "Fulfilled":
         return "bg-green-400";
       default:
         return null;
