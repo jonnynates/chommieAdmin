@@ -5,8 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Client } from "../../api";
 import * as Yup from "yup";
 
-const phoneRegExp =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const customerSchema = Yup.object().shape({
   discord_name: Yup.string().required("Require a customer name"),
@@ -15,13 +14,13 @@ const customerSchema = Yup.object().shape({
   last_name: Yup.string(),
   email: Yup.string().email("Invalid email."),
   phone_number: Yup.string().matches(phoneRegExp, "Phone number is not valid."),
+  notes: Yup.string(),
 });
 
 function UserForm() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [user, setUser] = useState(false);
   const [initialValues, setInitialValues] = useState({
     discord_name: "",
     discord_id: "",
@@ -29,6 +28,7 @@ function UserForm() {
     last_name: "",
     email: "",
     phone_number: "",
+    notes: "",
   });
 
   const { id } = useParams();
@@ -46,7 +46,6 @@ function UserForm() {
       .then((res) => res.json())
       .then(
         (result) => {
-          setUser(result);
           setInitialValues({
             discord_name:
               result.discord_name != null ? result.discord_name : "",
@@ -56,6 +55,7 @@ function UserForm() {
             email: result.email != null ? result.email : "",
             phone_number:
               result.phone_number != null ? result.phone_number : "",
+            notes: result.notes != null ? result.notes : "",
           });
           setIsLoaded(true);
         },
@@ -75,6 +75,7 @@ function UserForm() {
         last_name: values.last_name,
         email: values.email,
         phone_number: values.phone_number,
+        notes: values.notes,
       };
       let response;
       if (id) {
@@ -218,6 +219,24 @@ function UserForm() {
                                 touched.phone_number && errors.phone_number
                               }
                               sx={{ width: 300 }}
+                            />
+                          </div>
+
+                          <div className="col-span-6 sm:col-span-6">
+                            <TextField
+                              id="outlined-basic"
+                              label="Additional notes"
+                              variant="outlined"
+                              className="block w-full rounded-md border-solid border border-gray-300 focus:border-gray-300 focus:ring-gray-300 focus-visible:outline-none p-3 resize-none"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              value={values.notes}
+                              name="notes"
+                              error={!!touched.notes && !!errors.notes}
+                              helperText={touched.notes && errors.notes}
+                              sx={{ width: 712 }}
+                              multiline
+                              rows={4}
                             />
                           </div>
                         </div>

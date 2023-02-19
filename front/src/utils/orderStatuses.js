@@ -4,7 +4,7 @@ const orderStatuses = {
   InStock: { id: 3, name: "In Stock" },
   PreOrdered: { id: 4, name: "Pre Ordered" },
   Reserved: { id: 5, name: "Reserved" },
-  Paid: { id: 6, name: "Paid" },
+  Fulfilled: { id: 6, name: "Fulfilled" },
   Passed: { id: 7, name: "Passed" },
   NewRequest: { id: 8, name: "New Request" },
   Removed: { id: 0, name: "Removed" },

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { RecoilRoot } from "recoil";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const App = () => {
   const [isIe, setIsIe] = useState(false);
@@ -28,7 +30,9 @@ const App = () => {
 
   return (
     <>
-      <Navigation />
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <Navigation />
+      </LocalizationProvider>
     </>
   );
 };

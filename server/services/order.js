@@ -75,9 +75,11 @@ function deleteOrder(req, res) {
 }
 
 function createNewOrder(req, res) {
+  console.log("req date", req.body.request_date);
   orderDB.createNewOrder(
     req.body.user_id,
     req.body.product_id,
+    req.body.request_date,
     req.body.notes,
     (response) => {
       const error = response.error;

@@ -20,7 +20,7 @@ const initialValues = {
   product_name: "",
   sku_code: "",
   price: "",
-  premium_bandai: false,
+  exclusive: "",
 };
 
 const kitSchema = Yup.object().shape({
@@ -30,7 +30,7 @@ const kitSchema = Yup.object().shape({
   product_name: Yup.string().required("Please input a product name"),
   sku_code: Yup.string().required("SKU is required"),
   price: Yup.string().required("Please add a price"),
-  premium_bandai: Yup.boolean(),
+  exclusive: Yup.string(),
 });
 
 function AddNewKit() {
@@ -62,7 +62,7 @@ function AddNewKit() {
     const kitBody = {
       name: values.product_name,
       product_line: values.product_line,
-      premium_bandai: values.premium_bandai,
+      exclusive: values.exclusive,
       price: values.price,
       sku_code: values.sku_code,
     };
@@ -199,15 +199,13 @@ function AddNewKit() {
                             <FormControlLabel
                               control={
                                 <Checkbox
-                                  // checked={checked}
-                                  // onChange={handleChange}
                                   onBlur={handleBlur}
                                   onChange={handleChange}
-                                  checked={values.premium_bandai}
-                                  name="premium_bandai"
+                                  checked={values.exclusive}
+                                  name="exclusive"
                                 />
                               }
-                              label="Premium Bandai"
+                              label="Exclusive"
                             />
                           </div>
                         </div>

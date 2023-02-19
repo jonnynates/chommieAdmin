@@ -100,7 +100,7 @@ export default function RequestDetails() {
                   <div className="sm:col-span-1">
                     <dt className="text-sm font-medium text-gray-500">SKU</dt>
                     <dd className="mt-1 text-sm text-gray-900">
-                      {order.hlj_ref}
+                      {order.sku_code}
                     </dd>
                   </div>
                   <div className="sm:col-span-1">

@@ -109,6 +109,12 @@ function Users() {
                         </th>
                         <th
                           scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Notes
+                        </th>
+                        <th
+                          scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                         >
                           <span className="sr-only">Edit</span>
@@ -129,6 +135,9 @@ function Users() {
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
                             {user.phone_number}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-4 text-sm">
+                            {user.notes}
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                             <UserDropdown currentUser={user} />

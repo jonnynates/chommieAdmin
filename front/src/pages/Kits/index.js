@@ -116,10 +116,32 @@ function Kits() {
                             {kit.product_line_name}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {kit.name}
+                            {Boolean(kit.gpsa_link !== null) ? (
+                              <a
+                                href={kit.gpsa_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                {kit.name}
+                              </a>
+                            ) : (
+                              kit.name
+                            )}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {kit.hlj_ref}
+                            {Boolean(kit.supplier_link !== null) ? (
+                              <a
+                                href={kit.supplier_link}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="font-medium text-indigo-600 hover:text-indigo-500"
+                              >
+                                {kit.sku_code}
+                              </a>
+                            ) : (
+                              kit.sku_code
+                            )}
                           </td>
                           <td className="whitespace-nowrap px-3 py-4 text-sm">
                             {kit.price}

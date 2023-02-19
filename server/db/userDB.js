@@ -54,7 +54,7 @@ function getUserById(id, cbFunc) {
 }
 
 function getAllUsers(cbFunc) {
-  const getUserQuery = `SELECT id, discord_name, discord_id, first_name, last_name, email, phone_number FROM users 
+  const getUserQuery = `SELECT id, discord_name, discord_id, first_name, last_name, email, phone_number, notes FROM users 
   WHERE discord_name != 'ChommieBot'
   ORDER BY discord_name`;
 
@@ -78,7 +78,7 @@ function isValidUser(username, cbFunc) {
 }
 
 function createNewUser(user, cbFunc) {
-  const query = `INSERT INTO users (discord_name, discord_id, first_name, last_name, email, phone_number) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id `;
+  const query = `INSERT INTO users (discord_name, discord_id, first_name, last_name, email, phone_number, notes) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id `;
 
   pgPool.query(
     query,
@@ -89,6 +89,7 @@ function createNewUser(user, cbFunc) {
       user.last_name,
       user.email,
       user.phone_number,
+      user.notes,
     ],
     (response) => {
       cbFunc(response);
@@ -97,8 +98,8 @@ function createNewUser(user, cbFunc) {
 }
 
 function updateUser(id, user, cbFunc) {
-  const query = `UPDATE users SET discord_name = $1, discord_id = $2, first_name = $3, last_name = $4, email = $5, phone_number = $6 
-  WHERE id = $7`;
+  const query = `UPDATE users SET discord_name = $1, discord_id = $2, first_name = $3, last_name = $4, email = $5, phone_number = $6, notes = $7 
+  WHERE id = $8`;
 
   pgPool.query(
     query,
@@ -109,6 +110,7 @@ function updateUser(id, user, cbFunc) {
       user.last_name,
       user.email,
       user.phone_number,
+      user.notes,
       id,
     ],
     cbFunc
