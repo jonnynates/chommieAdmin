@@ -183,16 +183,13 @@ class ClientAPI {
 
     fetchOpts.headers = this.constructHeadersFromOptions(options);
 
-    /*
-      TODO
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-    */
-    const requestUrl = `http://localhost:9000${url}`;
-    const response = await fetch(requestUrl, fetchOpts);
+    // const requestUrl = `http://localhost:9000${url}`;
+    let finalUrl = url;
+
+    if (this.baseUrl.length) {
+      finalUrl = this.baseUrl + url;
+    }
+    const response = await fetch(finalUrl, fetchOpts);
 
     if (response.status === 204) {
       return Promise.resolve(true);

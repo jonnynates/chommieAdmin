@@ -32,7 +32,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(app.oauth.errorHandler());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "..", "front", "build")));
+app.use(express.static("public"));
 
 // Auth and routes
 const authenticator = require("./auth/authenticator")(userDB);

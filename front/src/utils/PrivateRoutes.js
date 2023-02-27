@@ -6,7 +6,7 @@ const PrivateRoutes = () => {
     TOKEN_STORAGE_KEY,
     null
   );
-  return tokenInStorage ? <Outlet /> : <Navigate to="/login" />;
+  return tokenInStorage ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateRoutes;
