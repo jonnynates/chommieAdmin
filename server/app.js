@@ -49,10 +49,10 @@ const authRoutes = require("./routes/auth")(
 const orderRoutes = require("./routes/orders")(express.Router(), app, order);
 const kitRoutes = require("./routes/kits")(express.Router(), app, kit);
 const userRoutes = require("./routes/users")(express.Router(), app, user);
-app.use("/auth", authRoutes);
-app.use("/orders", orderRoutes);
-app.use("/kits", kitRoutes);
-app.use("/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/kits", kitRoutes);
+app.use("/api/users", userRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
