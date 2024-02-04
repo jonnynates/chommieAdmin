@@ -33,7 +33,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(app.oauth.errorHandler());
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "..", "front", "build")));
-app.use(express.static("public"));
 
 // Auth and routes
 const authenticator = require("./auth/authenticator")(userDB);
@@ -53,6 +52,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/kits", kitRoutes);
 app.use("/api/users", userRoutes);
+app.use(express.static("public"));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/public/index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

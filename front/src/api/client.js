@@ -1,5 +1,5 @@
 class ClientAPI {
-  baseUrl = process.env.REACT_APP_API_ENDPOINT;
+  baseUrl = 'api';
   token = "";
 
   getToken() {
@@ -120,7 +120,7 @@ class ClientAPI {
     return this.fetch(`/users/${id}`, {
       method: "PATCH",
       body,
-    });
+  });
   }
 
   createUser(body) {

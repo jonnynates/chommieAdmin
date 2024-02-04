@@ -15,6 +15,7 @@ import EditRequest from "./pages/Requests/EditRequest";
 import AddNewKit from "./pages/Kits/AddNewKit";
 import Users from "./pages/Users";
 import UserForm from "./pages/Users/UserForm";
+import Loading from "./loading";
 
 export default function Navigation() {
   const [hasPerformedInitialLoad, setHasPerformedInitialLoad] = useState(false);
@@ -32,7 +33,14 @@ export default function Navigation() {
     }
 
     authUser(tokenInStorage);
+    if (tokenInStorage == null) {
+      setHasPerformedInitialLoad(true);
+    }
   }, []);
+
+  if (!hasPerformedInitialLoad) {
+    return <Loading />;
+  }
 
   return (
     <Router>
